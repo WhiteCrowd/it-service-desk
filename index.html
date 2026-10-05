@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IT Service Desk</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <div class="header">
+    <h1>IT Service Desk</h1>
+  </div>
+
+  <div class="container">
+
+    <!-- message for success / errors -->
+    <p id="message"></p>
+
+    <!-- summary numbers -->
+    <div class="box" id="summary"></div>
+
+    <!-- form to create a new request -->
+    <div class="box">
+      <h2>New request</h2>
+      <form id="newForm">
+        <label>Your name</label>
+        <input type="text" id="requester">
+
+        <label>Title</label>
+        <input type="text" id="title">
+
+        <label>Category</label>
+        <select id="category"></select>
+
+        <label>Priority</label>
+        <select id="priority"></select>
+
+        <label>Description</label>
+        <textarea id="description" rows="3"></textarea>
+
+        <button type="submit">Create request</button>
+      </form>
+    </div>
+
+    <!-- list of requests -->
+    <div class="box">
+      <h2>Requests</h2>
+      <label>Status</label>
+      <select id="filterStatus"></select>
+      <label>Priority</label>
+      <select id="filterPriority"></select>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Assigned to</th>
+            <th>Due</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="ticketTable"></tbody>
+      </table>
+    </div>
+
+    <!-- details of the selected request -->
+    <div class="box" id="details" style="display: none;"></div>
+
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
