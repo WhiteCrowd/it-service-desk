@@ -189,7 +189,7 @@ def get_config():
     return jsonify({"categories": Categories, "priorities": Priorities,
                     "statuses": Statuses, "technicians": list(Technicians)})
     
-@app.route("/requests", methods=["POST"])
+@app.route("/requests", methods=["POST"]) #validate, save, log, auto-assign
 def add_request():
     data = read_json()
     if data is None:
@@ -220,7 +220,7 @@ def add_request():
     return jsonify(ticket), 201
  
  
-@app.route("/requests", methods=["GET"])
+@app.route("/requests", methods=["GET"]) #list, with filters 
 def list_requests():
     conn = get_connection()
     escalate_overdue(conn)
@@ -240,7 +240,7 @@ def list_requests():
     return jsonify([dict(row) for row in rows])
  
  
-@app.route("/requests/<int:ticket_id>", methods=["GET"])
+@app.route("/requests/<int:ticket_id>", methods=["GET"]) #one request plus its history and overdue flag
 def get_request(ticket_id):
     conn = get_connection()
     ticket = get_ticket(conn, ticket_id)
@@ -257,7 +257,7 @@ def get_request(ticket_id):
     return jsonify(ticket)
  
  
-@app.route("/requests/<int:ticket_id>", methods=["PUT"])
+@app.route("/requests/<int:ticket_id>", methods=["PUT"]) #edit title, description, category, priority
 def update_request(ticket_id):
     data = read_json()
     if data is None:
@@ -272,7 +272,7 @@ def update_request(ticket_id):
         conn.close()
         return jsonify({"error": "Request not found"}), 404
  
-    # use the new value if sent, otherwise keep the old one
+    # uses the new value if sent, otherwise keep the old one
     title = data.get("title", ticket["title"])
     description = data.get("description", ticket["description"])
     category = data.get("category", ticket["category"])
@@ -292,7 +292,7 @@ def update_request(ticket_id):
     return jsonify(ticket)
  
  
-@app.route("/requests/<int:ticket_id>/status", methods=["PATCH"])
+@app.route("/requests/<int:ticket_id>/status", methods=["PATCH"]) #change status, but only along allowed transitions
 def change_status(ticket_id):
     data = read_json()
     if data is None or "status" not in data:
@@ -326,7 +326,7 @@ def change_status(ticket_id):
     return jsonify(ticket)
  
  
-@app.route("/requests/<int:ticket_id>/assign", methods=["PATCH"])
+@app.route("/requests/<int:ticket_id>/assign", methods=["PATCH"]) #reassign to another technician
 def assign_request(ticket_id):
     data = read_json()
     if data is None or data.get("assignee") not in Technicians:
@@ -351,7 +351,7 @@ def assign_request(ticket_id):
     return jsonify(ticket)
  
  
-@app.route("/requests/<int:ticket_id>", methods=["DELETE"])
+@app.route("/requests/<int:ticket_id>", methods=["DELETE"]) #delete the request and its history
 def delete_request(ticket_id):
     conn = get_connection()
     if get_ticket(conn, ticket_id) is None:
@@ -365,7 +365,7 @@ def delete_request(ticket_id):
     return jsonify({"message": "Request " + str(ticket_id) + " deleted"})
  
  
-@app.route("/reports/summary", methods=["GET"])
+@app.route("/reports/summary", methods=["GET"]) #counts by status, priority, category, and overdue
 def summary():
     conn = get_connection()
     escalate_overdue(conn)
