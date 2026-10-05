@@ -75,7 +75,7 @@ def init_db():
     conn.close()
     
     
-def get_ticket(conn, ticket_id):
+def get_ticket(conn, ticket_id): #fetches one request and turns it into a dictionary
     row = conn.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,)).fetchone()
     if row is None:
         return None
